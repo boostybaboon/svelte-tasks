@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { fade } from "svelte/transition";
     import type { Task } from "./types";
 
     let {
@@ -14,15 +15,18 @@
 
 <section>
     {#each tasks as task}
-        <article class="task">
+        <article class="task" transition:fade>
             <label>
-                <input 
+                <input
                     checked={task.done}
                     onchange={() => toggleDone(task)}
-                    type="checkbox" />
-                <span class:done={task.done}>{task.title}</span>    
+                    type="checkbox"
+                />
+                <span class:done={task.done}>{task.title}</span>
             </label>
-            <button onclick={() => removeTask(task.id)} class="outline">Remove</button>
+            <button onclick={() => removeTask(task.id)} class="outline"
+                >Remove</button
+            >
         </article>
     {/each}
 </section>
