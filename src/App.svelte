@@ -32,7 +32,13 @@
 <main>
   <h1>{message}</h1>
   <TasksForm {addTask} />
-  <p>{totalDone} / {tasks.length} tasks completed</p>
+  <p>
+    {#if tasks.length}
+      {totalDone} / {tasks.length} tasks completed
+    {:else}
+      Add a task to get started!
+    {/if}
+  </p>
   <TasksList {tasks} {toggleDone} {removeTask} />
 </main>
 
