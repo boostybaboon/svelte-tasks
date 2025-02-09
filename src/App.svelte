@@ -1,7 +1,7 @@
 <script lang="ts">
   import TasksForm from "./components/tasks-form.svelte";
   import TasksList from "./components/tasks-list.svelte";
-  import type { Task, Filter } from "./components/types";
+  import type { Task, Filter } from "../api/src/types";
 
   let message = "Tasks App";
   let currentFilter = $state<Filter>("all");
@@ -23,6 +23,15 @@
       }
     }
     return tasks;
+  });
+
+  import { onMount } from "svelte";
+
+  // use a $effect without dependencies instead?
+  onMount(async () => {
+    const response = await fetch("/api/LoadList");
+    const data: Task[] = await response.json();
+    tasks = data;
   });
 
   function addTask(newTask: string) {
