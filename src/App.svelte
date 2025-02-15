@@ -1,11 +1,16 @@
 <script lang="ts">
   import TasksForm from "./components/tasks-form.svelte";
   import TasksList from "./components/tasks-list.svelte";
-  import type { Task, Filter } from "../api/src/types";
+  import type { Task, Filter } from "./components/types";
+  import { getTaskList1, addTask1, setTaskDone1, removeTask1 } from "./services/taskService";
+  import { onMount } from "svelte";
 
   let message = "Tasks App";
   let currentFilter = $state<Filter>("all");
   let tasks = $state<Task[]>([]);
+  let userId = "1"; // Replace with actual user ID, when authentication is implemented
+  let taskListId = "1"; // Replace with actual task list ID, when multiple lists are supported
+
   let totalDone = $derived(
     tasks.reduce((total, task) => total + Number(task.done), 0),
   );
@@ -25,30 +30,27 @@
     return tasks;
   });
 
-  import { onMount } from "svelte";
-
   // use a $effect without dependencies instead?
   onMount(async () => {
     const response = await fetch("/api/LoadList");
     const data: Task[] = await response.json();
-    tasks = data;
+    tasks = await getTaskList1(userId, taskListId);
   });
 
-  function addTask(newTask: string) {
-    tasks.push({
-      id: crypto.randomUUID(),
-      title: newTask,
-      done: false,
-    });
+  async function handleAddTask(newTaskTitle: string) {
+    const newTask: Task = { id: crypto.randomUUID(), title: newTaskTitle, done: false };
+    const addedTask = await addTask1(userId, taskListId, newTask);
+    console.log(addedTask);
   }
 
-  function toggleDone(task: Task) {
-    task.done = !task.done;
+  async function handleToggleDone(task: Task) {
+    const toggledTask = await setTaskDone1(userId, taskListId, task.id, !task.done);
+    console.log(toggledTask);
   }
 
-  function removeTask(id: string) {
-    const index = tasks.findIndex((t) => t.id === id);
-    tasks.splice(index, 1);
+  async function handleRemoveTask(id: string) {
+    const removedTask = await removeTask1(userId, taskListId, id);
+    console.log(removedTask);
   }
 </script>
 
@@ -62,7 +64,7 @@
 
 <main>
   <h1>{message}</h1>
-  <TasksForm {addTask} />
+  <TasksForm addTask={handleAddTask} />
   <p>
     {#if tasks.length}
       {totalDone} / {tasks.length} tasks completed
@@ -77,7 +79,7 @@
       {@render filterButton("done")}
     </div>
   {/if}
-  <TasksList tasks={filteredTasks} {toggleDone} {removeTask} />
+  <TasksList tasks={filteredTasks} toggleDone={handleToggleDone} removeTask={handleRemoveTask} />
 </main>
 
 <style>

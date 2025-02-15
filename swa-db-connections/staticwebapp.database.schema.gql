@@ -1,0 +1,25 @@
+"""
+Add your CosmosDB NoSQL database schema in this file
+"""
+
+type Task {
+  id: ID!
+  title: String!
+  done: Boolean!
+}
+
+type TaskList @model {
+  id: ID!
+  userId: String!
+  tasks: [Task!]!
+}
+
+type Query {
+  getTaskList(userId: String!): TaskList
+}
+
+type Mutation {
+  addTask(userId: String!, taskListId: String!, id: String!, title: String!, done: Boolean!): Task
+  toggleTaskDone(userId: String!, taskListId: String!, taskId: String!): Task
+  removeTask(userId: String!, taskListId: String!, taskId: String!): Task
+}

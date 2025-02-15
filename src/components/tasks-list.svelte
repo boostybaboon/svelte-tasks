@@ -1,6 +1,6 @@
 <script lang="ts">
     import { fade } from "svelte/transition";
-    import type { Task } from "../../api/src/types"; // is this ok - getting types from the api?
+    import type { Task } from "./types"; // is this ok - getting types from the api?
 
     let {
         tasks,
