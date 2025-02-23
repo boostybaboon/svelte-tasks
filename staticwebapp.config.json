@@ -1,5 +1,33 @@
 {
-    "navigationFallback": {
-      "rewrite": "/index.html"
+  "navigationFallback": 
+  {
+    "rewrite": "/index.html"
+  },
+  "trailingSlash": "auto",
+  "routes": [
+    {
+      "route": "/logout",
+      "redirect": "/.auth/logout"
+    },
+    {
+      "route": "/login/aad",
+      "redirect": "/.auth/login/aad"
+    },
+    {
+      "route": "/login/facebook",
+      "redirect": "/.auth/login/facebook"
+    },
+    {
+      "route": "/login/github",
+      "redirect": "/.auth/login/github"
+    },
+    {
+      "route": "/login/google",
+      "redirect": "/.auth/login/google"
+    },
+    {
+      "route": "/login/x",
+      "redirect": "/.auth/login/x"
     }
-  }
+  ]
+}

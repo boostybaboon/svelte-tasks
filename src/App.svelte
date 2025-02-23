@@ -3,12 +3,14 @@
   import TasksList from "./components/tasks-list.svelte";
   import type { Task, Filter } from "./components/types";
   import { getTaskListId, getTaskList, addTask, updateTask, removeTask } from "./services/taskService";
+  import { getUserInfo } from "./services/userService";
   import { onMount } from "svelte";
 
   let message = "Tasks App";
   let currentFilter = $state<Filter>("all");
   let tasks = $state<Task[]>([]);
-  let userId = "user-1"; // Replace with actual user ID, when authentication is implemented
+  let userId = $state<string>("user-1");
+  let userName = $state<string>("Anonymous user!");
   let taskListId = ""; 
 
   let totalDone = $derived(
@@ -32,6 +34,16 @@
 
   // use a $effect without dependencies instead?
   onMount(async () => {
+    const userInfo = await getUserInfo();
+    console.log(userInfo);
+    if (userInfo) {
+      userId = userInfo.userId;
+      userName = userInfo.userDetails;
+    }
+    else {
+      userId = "user-1";
+      userName = "Anonymous user!";
+    }
     taskListId = await getTaskListId(userId);
     tasks = await getTaskList(taskListId);
   });
@@ -67,6 +79,18 @@
 
 <main>
   <h1>{message}</h1>
+  <p>Welcome, {userName}!</p>
+  <p>Not sure facebook, google or X logins will work without me paying money...</p>
+  <nav>
+    <ul>
+      <li><a href="/login/aad">Login with AAD</a></li>
+      <li><a href="/login/facebook">Login with Facebook</a></li>
+      <li><a href="/login/github">Login with GitHub</a></li>
+      <li><a href="/login/google">Login with Google</a></li>
+      <li><a href="/login/x">Login with X</a></li>
+      <li><a href="/logout">Logout</a></li>
+    </ul>
+  </nav>
   <TasksForm addTask={handleAddTask} />
   <p>
     {#if tasks.length}

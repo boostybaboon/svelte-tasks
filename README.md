@@ -21,3 +21,13 @@ create cosmos in azure
 connect to it in the static web app src in an idiomatic swa way
 put an api around a model which accesses this db connection
 i.e. architect the static web app in an view<->api<->db modular fashion so we can rearrange later if required
+
+Notes:
+
+Azure Web PubSub is a service which can help update the client views with changes from the server (triggered by one client)
+
+https://learn.microsoft.com/en-us/azure/azure-web-pubsub/tutorial-serverless-static-web-app
+
+Not implemented here, but useful to know about
+
+

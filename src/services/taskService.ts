@@ -38,11 +38,29 @@ const GET_TASKS = `
   }
 `;
 
+const CREATE_TASK_LIST_FOR_USER = `
+  mutation addTaskList($taskListToAdd: CreateTaskListInput!) {
+    createTaskList(item: $taskListToAdd) {
+      id
+      userId
+    }
+  }
+`;
+
 export async function getTaskListId(userId: string): Promise<string> {
-  const taskListData = await fetchGraphQL(
+  var taskListData = await fetchGraphQL(
     GET_USER_TASK_LIST_IDS, { "f": { "userId": {"eq": userId} }, });
-  console.log(taskListData);
-  const firstTaskList = taskListData.taskLists.items[0].id;
+  console.log("Try get existing task list data for user: ", taskListData);
+  var firstTaskList = "";
+  if (taskListData.taskLists.items.length === 0) {
+    taskListData = await fetchGraphQL(
+      CREATE_TASK_LIST_FOR_USER, { "taskListToAdd": { "id": crypto.randomUUID(), "userId": userId } });
+      console.log("New task list data for user: ", taskListData);
+      firstTaskList = taskListData.createTaskList.id;
+  }
+  else {
+    firstTaskList = taskListData.taskLists.items[0].id;
+  }
   console.log(firstTaskList);
   return firstTaskList;
 }
@@ -117,3 +135,4 @@ export async function setTaskTitle(userId: string, taskListId: string, taskId: s
   const data = await fetchGraphQL(SET_TASK_TITLE, { userId, taskListId, taskId, title });
   return data.updateTask;
 }
+
