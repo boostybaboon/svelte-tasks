@@ -2,14 +2,14 @@
   import TasksForm from "./components/tasks-form.svelte";
   import TasksList from "./components/tasks-list.svelte";
   import type { Task, Filter } from "./components/types";
-  import { getTaskList1, addTask1, setTaskDone1, removeTask1 } from "./services/taskService";
+  import { getTaskListId, getTaskList, addTask, updateTask, removeTask } from "./services/taskService";
   import { onMount } from "svelte";
 
   let message = "Tasks App";
   let currentFilter = $state<Filter>("all");
   let tasks = $state<Task[]>([]);
-  let userId = "1"; // Replace with actual user ID, when authentication is implemented
-  let taskListId = "1"; // Replace with actual task list ID, when multiple lists are supported
+  let userId = "user-1"; // Replace with actual user ID, when authentication is implemented
+  let taskListId = ""; 
 
   let totalDone = $derived(
     tasks.reduce((total, task) => total + Number(task.done), 0),
@@ -32,25 +32,28 @@
 
   // use a $effect without dependencies instead?
   onMount(async () => {
-    const response = await fetch("/api/LoadList");
-    const data: Task[] = await response.json();
-    tasks = await getTaskList1(userId, taskListId);
+    taskListId = await getTaskListId(userId);
+    tasks = await getTaskList(taskListId);
   });
 
   async function handleAddTask(newTaskTitle: string) {
     const newTask: Task = { id: crypto.randomUUID(), title: newTaskTitle, done: false };
-    const addedTask = await addTask1(userId, taskListId, newTask);
-    console.log(addedTask);
+    const addedTask = await addTask(newTask, taskListId);
+    console.log("added a task in App.svelte", addedTask);
+    tasks = [...tasks, addedTask];
   }
 
   async function handleToggleDone(task: Task) {
-    const toggledTask = await setTaskDone1(userId, taskListId, task.id, !task.done);
+    task.done = !task.done;
+    const toggledTask = await updateTask(task, taskListId);
     console.log(toggledTask);
+    tasks = tasks.map((t) => (t.id === task.id ? { ...t, done: toggledTask.done } : t));
   }
 
   async function handleRemoveTask(id: string) {
-    const removedTask = await removeTask1(userId, taskListId, id);
+    const removedTask = await removeTask(id);
     console.log(removedTask);
+    tasks = tasks.filter((t) => t.id !== id);
   }
 </script>
 

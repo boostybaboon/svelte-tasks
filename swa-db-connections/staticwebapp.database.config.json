@@ -2,19 +2,13 @@
   "$schema": "https://github.com/Azure/data-api-builder/releases/download/v1.3.19/dab.draft.schema.json",
   "data-source": {
     "database-type": "cosmosdb_nosql",
-    "connection-string": "$SVELTE_TASKS_APP_COSMOSDB_CONNECTION_STRING",
+    "connection-string": "@env('SVELTE_TASKS_APP_COSMOSDB_CONNECTION_STRING')",
     "options": {
-      "database": "svelte-tasks-db-id",
-      "container": null,
+      "database": "svelte-test",
       "schema": "staticwebapp.database.schema.gql"
     }
   },
   "runtime": {
-    "rest": {
-      "enabled": false,
-      "path": "/api",
-      "request-body-strict": true
-    },
     "graphql": {
       "enabled": true,
       "path": "/graphql",
@@ -22,14 +16,33 @@
     },
     "host": {
       "cors": {
-        "origins": [],
+        "origins": ["http://localhost:4280"],
         "allow-credentials": false
       },
       "authentication": {
         "provider": "StaticWebApps"
       },
-      "mode": "production"
+      "mode": "development"
     }
   },
-  "entities": {}
+  "entities": {
+    "Task": {
+      "source": "tasks",
+      "permissions": [
+        {
+          "role": "anonymous",
+          "actions": ["*"]
+        }
+      ]
+    },
+    "TaskList": {
+      "source": "tasklists",
+      "permissions": [
+        {
+          "role": "anonymous",
+          "actions": ["*"]
+        }
+      ]
+    }
+  }
 }
