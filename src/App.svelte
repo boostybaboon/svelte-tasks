@@ -83,11 +83,11 @@
   <p>Not sure facebook, google or X logins will work without me paying money...</p>
   <nav>
     <ul>
-      <li><a href="/login/aad">Login with AAD</a></li>
-      <li><a href="/login/facebook">Login with Facebook</a></li>
+      <li><a href="/login/aad">Login with Microsoft</a></li>
+      <li><a href="/login/facebook"><s>Login with Facebook</s></a></li>
       <li><a href="/login/github">Login with GitHub</a></li>
-      <li><a href="/login/google">Login with Google</a></li>
-      <li><a href="/login/x">Login with X</a></li>
+      <li><a href="/login/google"><s>Login with Google</s></a></li>
+      <li><a href="/login/x"><s>Login with X</s></a></li>
       <li><a href="/logout">Logout</a></li>
     </ul>
   </nav>

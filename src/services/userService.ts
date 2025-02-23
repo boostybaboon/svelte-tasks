@@ -1,6 +1,3 @@
-//import type { Client} from '@azure/identity';
-//debug to find out what type we actually get here...
-
 /**
  * e.g. 
  * { 
@@ -16,7 +13,10 @@
  */
 export async function getUserInfo() {
     const response = await fetch('/.auth/me');
+    //console.log("response", response);
     const payload = await response.json();
+    //console.log("payload", payload);
     const { clientPrincipal } = payload;
+    //console.log("clientPrincipal", clientPrincipal);
     return clientPrincipal;
   }

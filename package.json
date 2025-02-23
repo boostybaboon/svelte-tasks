@@ -17,7 +17,5 @@
     "typescript": "~5.7.2",
     "vite": "^6.1.0"
   },
-  "dependencies": {
-    "@azure/identity": "^4.7.0"
-  }
+  "dependencies": {}
 }
